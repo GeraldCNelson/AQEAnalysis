@@ -249,41 +249,41 @@ cor(combined$NO2_b0111,combined$PMfine_LaCasa)
 cor(combined$PM10_LaCasa,combined$PMfine_LaCasa)
 
 # ozone with egg b0111 -----
-O3only_b0111 <- lm(O3_LaCasa ~ 
+O3only <- lm(O3_LaCasa ~ 
             O3_b0111, 
           data = combined)
-combined[, O3only_b0111.fitted := fitted(O3only_b0111)]
+combined[, O3only_b0111.fitted := fitted(O3only)]
 
-O3vonly_b0111 <- lm(O3_LaCasa ~ 
+O3vonly <- lm(O3_LaCasa ~ 
              O3_v_b0111, 
            data = combined)
-combined[, O3vonly_b0111.fitted := fitted(O3vonly_b0111)]
+combined[, O3vonly_b0111.fitted := fitted(O3vonly)]
 
-O3vPlusLaCasaTAh_b0111 <- lm(O3_LaCasa ~ 
+O3vPlusLaCasaTAh <- lm(O3_LaCasa ~ 
              O3_v_b0111 + temp_LaCasa + ah_LaCasa, 
            data = combined)
-combined[, O3vPlusLaCasaTAh_b0111.fitted := fitted(O3vPlusLaCasaTAh_b0111)]
+combined[, O3vPlusLaCasaTAh_b0111.fitted := fitted(O3vPlusLaCasaTAh)]
 
-O3vPlusLaCasaTAhPlusNO2_b0111 <- lm(O3_LaCasa ~ 
+O3vPlusLaCasaTAhPlusNO2 <- lm(O3_LaCasa ~ 
              O3_v_b0111 + temp_LaCasa + ah_LaCasa + NO2_b0111, 
            data = combined)
-combined[, O3vPlusLaCasaTAhPlusNO2_b0111.fitted := fitted(O3vPlusLaCasaTAhPlusNO2_b0111)]
+combined[, O3vPlusLaCasaTAhPlusNO2_b0111.fitted := fitted(O3vPlusLaCasaTAhPlusNO2)]
 
-O3vPlusEggTAhPlusNO2_b0111 <- lm(O3_LaCasa ~ 
+O3vPlusEggTAhPlusNO2 <- lm(O3_LaCasa ~ 
              O3_v_b0111 + temp_b0111 + ah_b0111 + NO2_b0111, 
            data = combined)
-combined[, O3vPlusEggTAhPlusNO2_b0111.fitted := fitted(O3vPlusEggTAhPlusNO2_b0111)]
+combined[, O3vPlusEggTAhPlusNO2_b0111.fitted := fitted(O3vPlusEggTAhPlusNO2)]
 
-O3vPlusLaCasaTAhPlusNO2v_b0111 <- lm(O3_LaCasa ~ 
+O3vPlusLaCasaTAhPlusNO2v <- lm(O3_LaCasa ~ 
              O3_v_b0111 + temp_LaCasa + ah_LaCasa + NO2_Aux_v_b0111, 
            data = combined)
-combined[, O3vPlusLaCasaTAhPlusNO2v_b0111.fitted := fitted(O3vPlusLaCasaTAhPlusNO2v_b0111)]
+combined[, O3vPlusLaCasaTAhPlusNO2v_b0111.fitted := fitted(O3vPlusLaCasaTAhPlusNO2v)]
 
-O3vPlusLaCasaTAhPlusNO2V2_b0111 <- lm(O3_LaCasa ~ 
+O3vPlusLaCasaTAhPlusNO2V2 <- lm(O3_LaCasa ~ 
              O3_v_b0111 + NO2_Aux_v_b0111 + NO2_WE_v_b0111 +
              temp_LaCasa + ah_LaCasa, 
            data = combined)
-combined[, O3vPlusLaCasaTAhPlusNO2V2_b0111.fitted := fitted(O3vPlusLaCasaTAhPlusNO2V2_b0111)]
+combined[, O3vPlusLaCasaTAhPlusNO2V2_b0111.fitted := fitted(O3vPlusLaCasaTAhPlusNO2V2)]
 
 temp <- data.table::copy(combined)
 keepListCol <- c("O3_LaCasa", "O3_v_b0111", "NO2_Aux_v_b0111", "NO2_WE_v_b0111", 
