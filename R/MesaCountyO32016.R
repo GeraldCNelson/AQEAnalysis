@@ -7,6 +7,7 @@ library(mapdata)
 library(openair)
 library(rgdal)
 library(maps)
+library(leaflet)
 # fips.code for Mesa County is 8077
 #ozoneSites.lines <- readOGR("data-raw/MesaCty2016/Grand_Junction.kml", layer = "Grand Junction", require_geomType="wkbLineString")
 
@@ -61,8 +62,9 @@ Whitewater <- as.data.table(read_csv("~/Documents/workspace/AQEAnalysis/data-raw
                                        ws = col_double(),
                                        O3_Avg = col_double()
                                      )))
-Whitewater <- Whitewater[1:(nrow(Ute) - 37), ] # get rid of ending rows with all NAs for data
+Whitewater <- Whitewater[1:(nrow(Whitewater) - 37), ] # get rid of ending rows with all NAs for data
 # Whitewater doesn't actually have any wind speed or direction information
+Whitewater[, c("wd", "ws") := NULL]
 
 # Powell PM 2.5 and PM 10
 Powell_PM <- as.data.table(read_csv("~/Documents/workspace/AQEAnalysis/data-raw/MesaCty2016/Powell_PM_0401_09302016.csv",
@@ -138,7 +140,7 @@ setcolorder(combined.sites, c("date", "O3_Avg_BangsCanyon", "O3_Avg_BookCliffs",
                               "T_Air_BangsCanyon", "T_Air_BookCliffs", "T_Air_Escalante", "T_Air_Highline", "T_Air_GrandMesa", "T_Air_DougPass", "T_Air_Ute",
                               "wd_BangsCanyon", "ws_BangsCanyon", "wd_BookCliffs", "ws_BookCliffs",  "wd_Escalante", "ws_Escalante",  
                               "wd_Highline", "ws_Highline", "wd_Ute", "ws_Ute","wd_Palisade", "ws_Palisade",  "wd_Pitkin", "ws_Pitkin"))
-
+saveRDS(combined.sites, file = "GrandValleyOzoneMonitoring/data/combined.sites.RDS")
 # p <- ggplot(data = combined.sites, aes(x = date)) +  scale_x_datetime(date_breaks = "1 day", date_labels = "%m %d")
 # O3 <- p + geom_line(aes(y = O3_Avg_DougPass, color = "DougPass")) + labs(y = "ozone (ppb)")
 # O3 <- O3 + geom_line(aes(y = O3_Avg_Palisade, color = "Palisade")) 
@@ -202,7 +204,12 @@ dt.sumStats[, date := as.POSIXct(date, origin = "1970-01-01")]
 dt.sumStats[, date := as.POSIXct(date, format = "%m/%d/%y %H:%M")]
 colsToRound <- names(dt.sumStats)[!names(dt.sumStats) %in% "date"]
 dt.sumStats[, (colsToRound) := round(.SD,1), .SDcols = colsToRound]
-
+dt.sumStats[, value := c("Minimum", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max", "NAs")]
+newOrder <- c("value", names(dt.sumStats)[!names(dt.sumStats) %in% "value"])
+setcolorder(dt.sumStats, newOrder)
+dt.sumStats[, date := as.character(date)]
+dt.sumStats[7, date := ""]
+saveRDS(dt.sumStats, file = "GrandValleyOzoneMonitoring/data/dt.sumStats")
 timemax <- 4645 # 4645 # number of frames (and observations - so no interpolation needed)
 vis <- 100 # how many time points are on the screen at one time
 
@@ -275,15 +282,37 @@ county <- as.data.table(map_data("county"))
 mesa <- county[region %in% "colorado" & subregion %in% "mesa"]
 #mesa <- mesa[lat > 38.8]
 ozoneSites.points <- as.data.table(readOGR("data-raw/MesaCty2016/Grand_Junction.kml", layer = "Grand Junction", require_geomType="wkbPoint"))
+siteInfo <- data.table(Name = ozoneSites.points$Name, siteCharacteristics = c(
+  "Palisade water treatment plant, elevation = 4,980 ft", 
+  "Grand Junction Pitken Shelter, elevation = ",
+  "Bang's Canyon, elevation = ",
+  "Ute Water tank, north of I-70, elevation = ",
+  "Escalante, elevation = ",
+  "Douglas Pass, operated by the US Forest Service, elevation = ", 
+  "Lands End, operated by the US Forest Service, elevation = ",
+  "Book Cliffs, elevation =",  
+  "Highline State Park, elevation = ",
+  "Whitewater, elevation = "
+  ))
+ozoneSites.points <- merge(ozoneSites.points, siteInfo, by = "Name")
+saveRDS(ozoneSites.points, file = "GrandValleyOzoneMonitoring/data/ozoneSites.points.RDS")
 
+# ggMesa <- ggplot() + geom_polygon(data = mesa, aes(x=long, y = lat, group = group, fill = "white")) + 
+#   coord_fixed(1.3) +
+#   theme(legend.position="none")
+# ggMesa <- ggMesa + geom_point(data = ozoneSites.points, aes(x = coords.x1, y = coords.x2), size = 2) +
+#   geom_text(data = ozoneSites.points, aes(x = coords.x1, y = coords.x2,  label = Name),hjust=0, vjust=0, nudge_x = .05) +
+#   labs(title = "CDPHE Grand Valley Ozone Monitoring sites")
+# ggMesa
 
-ggMesa <- ggplot() + geom_polygon(data = mesa, aes(x=long, y = lat, group = group, fill = "white")) + 
-  coord_fixed(1.3) +
-  theme(legend.position="none")
-ggMesa <- ggMesa + geom_point(data = ozoneSites.points, aes(x = coords.x1, y = coords.x2), size = 2) +
-  geom_text(data = ozoneSites.points, aes(x = coords.x1, y = coords.x2,  label = Name),hjust=0, vjust=0, nudge_x = .05) +
-  labs(title = "CDPHE Grand Valley Ozone Monitoring sites")
-ggMesa
-
-
+GJlat = 39.07
+GJlong = -108.7
+tileTypeTopo <- "http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png" # topoMap
+tileTypeOpenStreeMap <- 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+m <- leaflet(data = ozoneSites.points) %>%
+setView(lat = GJlat, lng = GJlong, zoom = 9) %>%
+addTiles(urlTemplate = tileTypeTopo) %>%
+  # Add  OpentTopoMap map tiles
+  addAwesomeMarkers(lat = ~coords.x2, lng = ~coords.x1, label =  ~as.character(Name), popup = ~siteCharacteristics)
+m
 
