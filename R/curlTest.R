@@ -12,11 +12,12 @@ handle_setheaders(myCurlHandle,
 ptm <- proc.time()
 URLbegin <- "https://api.opensensors.io"
 eggSerial <- "egg00802aaa019b0111" # NO2/O3
+#eggSerial <- "egg0080270b448b0153" # NO2/O3
 #eggSerial <- "egg008028730d880112" # particulates
-startDate <- "2016-10-18"
-startTime <- "17:30" #GMT
-endDate <- "2016-10-23"
-endTime <- "17:30" #GMT
+startDate <- "2017-08-26"
+startTime <- "23:00" #GMT
+endDate <- "2017-08-27"
+endTime <- "23:00" #GMT
 myURL <- paste0(URLbegin, "/v1/messages/device/",eggSerial, "?start-date=",startDate,"T",url_encode(startTime), "Z&",
                 "end-date=",endDate,"T",url_encode(endTime), "Z")
 
@@ -33,6 +34,7 @@ urlDownload <- function(myURL) {
  #   curl_download(url = myURL, destfile = "curlDownloadTest.csv", mode = "w", handle = myCurlHandle)
     req <- curl_fetch_memory(myURL, handle = myCurlHandle)
     init <- fromJSON(rawToChar(req$content))
+    print(init)
     temp <- as.data.table(bind_cols(
       select(init$messages, device, owner, topic, date),
       stream_in(textConnection(init$messages$payload$text), flatten = TRUE)))
@@ -51,7 +53,8 @@ urlDownload <- function(myURL) {
 }
 
 dt <- urlDownload(myURL)
-print(proc.time() - ptm)
+dt[, date := as.POSIXct(date, "%FT%T", tz = "UTC")] 
+#print(proc.time() - ptm)
 
 write.csv(dt, file = paste0(eggSerial,".downloadTest.csv"))
 
