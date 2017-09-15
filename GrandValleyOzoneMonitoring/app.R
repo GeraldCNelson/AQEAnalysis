@@ -7,7 +7,7 @@ library(data.table)
 library(ggplot2)
 library(leaflet)
 library(xtable)
-# library(dplyr) # to do %>%
+ library(dplyr) # to do %>%
 # library(dtplyr)
 # library(DT) # needs to come after library(shiny)
 # library(shinythemes)
@@ -108,7 +108,7 @@ server <- function(input, output) {
     GJlat = 39.07
     GJlong = -108.7
     tileTypeTopo <- "http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png" # topoMap
-    tileTypeOpenStreeMap <- 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+    tileTypeOpenStreetMap <- 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
     m <- leaflet(data = ozoneSites.points) %>%
       setView(lat = GJlat, lng = GJlong, zoom = 8) %>%
       addTiles(urlTemplate = tileTypeTopo) %>%
