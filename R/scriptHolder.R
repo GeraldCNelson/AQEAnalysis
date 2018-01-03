@@ -148,7 +148,7 @@ aqComparePlot <- function(variable,AQE2aEggs) {
                             aes(time, variable), color="red") + 
     labs(x="Time", y=variable) + 
     #  scale_x_datetime(breaks = seq(1000,2000,200), limits = c(1000,2000)) + 
-    scale_y_continuous() +
+    scale_y_continuous() + 
     geom_rect(data=rect1,aes(xmin=xmin,xmax=xmax,ymin =ymin,ymax =ymax),alpha=0.1,fill="blue")+
     geom_rect(data=rect2,aes(xmin=xmin,xmax=xmax,ymin =ymin,ymax =ymax),alpha=0.1,fill="blue")+
     theme(plot.margin = unit(c(0.5,0.5,-0,0.5), "lines"))

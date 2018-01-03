@@ -31,10 +31,10 @@ for (eggSerial in eggSerialList) {
   eggName <- paste(eggType, serialTail, sep = "_")
   
   #' Note: date and time information must use this format
-  startDate <- "2017-11-03"
-  startTime <- "14:54:00" 
-  endDate <- "2017-11-06"
-  endTime <- "13:55:00"
+  startDate <- "2017-11-16"
+  startTime <- "16:00:00" 
+  endDate <- "2017-11-18"
+  endTime <- "14:00:00"
   
   startTime <- url_encode(startTime)
   endTime <- url_encode(endTime)
@@ -114,7 +114,7 @@ for (eggSerial in eggSerialList) {
     finalLayout <- paste(temp[1], temp[2], suffix, collapse = "", sep = "")
     final <- eval(parse(text = finalLayout))
   }
-  saveRDS(final, file = paste0("results/CMUNov2017", "_", eggName, ".RDS", sep = ""))
+  saveRDS(final, file = paste0("results/CMUNovRound22017", "_", eggName, ".RDS", sep = ""))
 }
 
 # old code
