@@ -1,4 +1,4 @@
-Sys.setenv(TZ = "America/Denver") # needed to get rid of a warning message
+# Sys.setenv(TZ = "America/Denver") # needed to get rid of a warning message. Think this has been fixed.
 library(openxlsx)
 library(data.table)
 library(ggplot2)
@@ -80,18 +80,6 @@ for (eggSerial in eggSerialList) {
   assign(eggName, dt)
   eggNameList <- c(eggNameList, eggName)
   
-  # # read in the egg data and create  eggList. The suffix number is the number that James put on the bottom of each egg. 
-  # eggPM.1 <- readRDS(file = "results/CMUNovRound22017_particulate_d880112.RDS")
-  # eggList <- deparse(substitute(eggPM.1))
-  # eggNO2CO.2 <- readRDS(file = "results/CMUNovRound22017_no2co_89b0153.RDS")
-  # eggList <- c(eggList, deparse(substitute(eggNO2CO.2)))
-  # eggNO2CO.5 <- readRDS(file = "results/CMUNovRound22017_no2co_6080140.RDS")
-  # eggList <- c(eggList, deparse(substitute(eggNO2CO.5)))
-  # eggNO2O3.4 <- readRDS(file = "results/CMUNovRound22017_no2o3_48b0153.RDS")
-  # eggList <- c(eggList, deparse(substitute(eggNO2O3.4)))
-  # eggNO2O3.3 <- readRDS(file = "results/CMUNovRound22017_no2o3_19b0111.RDS")
-  # eggList <- c(eggList, deparse(substitute(eggNO2O3.3)))
-  # 
 }
 
 #' combine all the egg data and the official monitor data into one data table
@@ -104,7 +92,7 @@ dtList <- c(eggNameList, "o3_official")
 dtList <- mget(dtList)
 mergedDT <- Reduce(function(...) merge(..., all = TRUE, by = "timeStamp"), dtList)
 
-# now average mergedDT to 15 minutes
+# now average mergedDT to x minutes
 x <- "15"
 timeBreak <- paste0(x, " min")
 varsToAve <-  names(mergedDT)[!names(mergedDT) %in% "timeStamp"]
