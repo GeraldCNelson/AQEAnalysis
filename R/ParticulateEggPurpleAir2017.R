@@ -23,9 +23,9 @@ eggSerialList <- c("egg00802e31aba80123")
 # egg00802e6305980122
 #' what period to get info for. 
 #' Note: date and time information must use this format, including 24 hour clock
-startDate <- "2018-01-04"
+startDate <- "2018-01-01"
 startTime <- "08:00:00" #include two digits in hours, min, and seconds.
-endDate <- "2018-01-06"
+endDate <- "2018-01-02"
 endTime <- "14:00:00" #include two digits in hours, min, and seconds.
 
 #' folder to write data to

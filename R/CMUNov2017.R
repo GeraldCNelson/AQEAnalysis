@@ -1,4 +1,4 @@
-# Sys.setenv(TZ = "America/Denver") # needed to get rid of a warning message. Think this has been fixed.
+Sys.setenv(TZ = "America/Denver") # needed to get rid of a warning message
 library(openxlsx)
 library(data.table)
 library(ggplot2)
