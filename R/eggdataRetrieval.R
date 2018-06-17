@@ -1,4 +1,4 @@
-Sys.setenv(TZ = "America/Denver") # needed to get rid of a warning message
+# Sys.setenv(TZ = "America/Denver") # needed to get rid of a warning message. Maybe not now.
 library(curl)
 library(httr)
 library(jsonlite)
@@ -15,7 +15,8 @@ AQElogin <- "https://airqualityegg.wickeddevice.com/api/v1/login"
 
 sensors <- function(eggSerial) {
   if (eggSerial %in% c("egg00802aaa019b0111", "egg0080270b448b0153")) sensorList <- c("no2","o3")
-  if (eggSerial %in% c("egg00802e63038b0122", "egg00802d56461b0133", "egg00802e31aba80123", "egg00802e6306880122", "egg00802e6305980122")) sensorList <- c("particulate", "co2", "pressure")
+  if (eggSerial %in% c("egg00802e63038b0122", "egg00802d56461b0133", "egg00802e31aba80123", 
+                       "egg00802e6306880122", "egg00802e6305980122")) sensorList <- c("particulate", "co2", "pressure")
   if (eggSerial %in% c("egg008020c0d89b0153", "egg0080228ba6080140")) sensorList <- c("no2", "co")
   if (eggSerial %in% c("egg008028730d880112")) sensorList <- c("particulate")
   return(sensorList)
@@ -358,7 +359,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     grid.newpage()
     pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
     
-    # Make each plot, in the correct location
+    # Make each plot, in the correct locationhea
     for (i in 1:numPlots) {
       # Get the i,j matrix positions of the regions that contain this subplot
       matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
