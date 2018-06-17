@@ -8,6 +8,7 @@ library(openair)
 library(rgdal)
 library(maps)
 library(leaflet)
+
 # fips.code for Mesa County is 8077
 #ozoneSites.lines <- readOGR("data-raw/MesaCty2016/Grand_Junction.kml", layer = "Grand Junction", require_geomType="wkbLineString")
 
